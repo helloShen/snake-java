@@ -4,3 +4,4 @@ com/ciaoshen/game/snake/GameFrame.java
  com.ciaoshen.game.snake.GameFrame
 com/ciaoshen/game/snake/GamePanel.java
  com.ciaoshen.game.snake.GamePanel
+ com.ciaoshen.game.snake.GamePanel$MyKeyAdapter
