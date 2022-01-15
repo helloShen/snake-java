@@ -6,7 +6,7 @@
 ![ide](https://img.shields.io/badge/intellij-21.3.1-brightgreen)
 
 My implementation of a tiny game Hungry Snake. Developed based on java Swing.
-<img src="imgs/snake-welcome.png" alt="welcome" width="200", height="200"/>
+<img src="imgs/snake-welcome.png" alt="welcome" width="200" height="200"/>
 ![snake-welcome](imgs/snake-welcome.png)
 ![snake-gameplay](imgs/snake-gameplay.png)
 ![snake-gameover](imgs/snake-gameover.png)
