@@ -7,9 +7,9 @@
 
 My implementation of a tiny game Hungry Snake. Developed based on java Swing.
 <p align="right" width="100%">
-    <img width="33%" src="imgs/snake-welcome.png"> 
-    <img width="33%" src="imgs/snake-gameplay.png"> 
-    <img width="33%" src="imgs/snake-gameover.png"> 
+    <img width="30%" src="imgs/snake-welcome.png"> 
+    <img width="30%" src="imgs/snake-gameplay.png"> 
+    <img width="30%" src="imgs/snake-gameover.png"> 
 </p>
 
 ## Usage
