@@ -18,8 +18,8 @@ public class GameFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         this.setResizable(false);
-        this.setVisible(true);
         this.pack(); // let frame fit for its components
         this.setLocationRelativeTo(null);  // to appear at the center of the screen
+        this.setVisible(true); // make sure to call
     }
 }
