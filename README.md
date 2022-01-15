@@ -13,7 +13,7 @@ My implementation of a tiny game Hungry Snake. Developed based on java Swing.
 </p>
 
 ## Usage
-Download 
+Download the newest released version `snake-java-v1.0.jar`. Double click the application to run the game.
 
 ## UI
 Using Swing `JFrame` and `JPanel` as Graphic UI to draw a `600 * 600` board.
