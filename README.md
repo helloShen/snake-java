@@ -42,4 +42,11 @@ The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified i
 ## Keyboard events controls the snake
 Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` extends the `java.awt.event.KeyAdapter` abstract class, and overrides its `keyPressed()` method) to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
 
+## Project workflow
+- Language: `Java8`
+- Build Tool: `Gradle`
+- Unit Test: `JUnit-Jupiter`
+- Version Control: `Git`
+- IDE: `Intellij`
+
 
