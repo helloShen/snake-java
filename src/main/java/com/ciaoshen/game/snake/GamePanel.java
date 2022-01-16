@@ -80,6 +80,7 @@ public class GamePanel extends JPanel implements ActionListener {
         // start the game
         running = true;
         gameStarted = true;
+        timeEnd = 0;
         timeStart = System.currentTimeMillis();
         timer.start();
     }
@@ -91,10 +92,7 @@ public class GamePanel extends JPanel implements ActionListener {
         gameStarted = false;
         running = false;
         // draw "GAME OVER"
-        paintImmediately(0, 0, PANEL_WIDTH, PANEL_HEIGHT); // don't use repaint(), the repaint time is not promised.
-        // reinitialize game states
-        timeStart = 0;
-        timeEnd = 0;
+        repaint();
     }
 
     // snake move (modify snake[] array)
@@ -193,7 +191,7 @@ public class GamePanel extends JPanel implements ActionListener {
         g.drawString("[Press ENTER to try again!]", 100, 450);
     }
 
-    /* panel automatically call this method to paint the canvas */
+    /* panel automatically call this method to paint the panel when repaint() is invoked */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -219,8 +217,9 @@ public class GamePanel extends JPanel implements ActionListener {
                 eatApple();
             }
         }
-        paintImmediately(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        repaint();
     }
+
 
     /* KeyListener implementation which is fed to panel by using setKeyListener() method. */
     private class MyKeyAdapter extends KeyAdapter {
