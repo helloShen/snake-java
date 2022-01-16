@@ -13,16 +13,31 @@ My implementation of a tiny game Hungry Snake. Developed based on java Swing.
 </p>
 
 ## Usage
-Download the newest released version `snake-java-v1.0.jar`. Double click the application to run the game.
+Download the latest version: `snake-java-v1.0.jar`. Type the following command line in terminal:
+```bash
+java -jar <path-to-your-snake-java-v1.0.jar>
+```
+
+For example, if the `.jar` package is saved at `/Users/Tom/Desktop/snake-java-v1.0.jar`, then the command would be,
+```bash
+java -jar /Users/Tom/Desktop/snake-java-v1.0.jar
+```
 
 ## UI
-Using Swing `JFrame` and `JPanel` as Graphic UI to draw a `600 * 600` board.
+Using Swing `JFrame` and `JPanel` as a graphic tool to draw a `600 * 600` game board, which is further divided into `40 * 40` small units in size of `15 * 15` for each, called `Grid`.
 
 ## Animation
-The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals. Then implement `JPanel` as a `ActionListener` to monitor the events sent by `Timer` so as to draw the animation frame by frame.
+The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals (that is 100ms in my case). Meanwhile `JPanel` is implemented as a `ActionListener` to monitor the `ActionEvent` sent by `Timer` every 100 millisecond. Then these `ActionEvent` trigger `JPanel` to call `actionPerformed()` method to draw the panel frame by frame.
 
 ## Keyboard controls the snake
-Bind `java.awt.event.KeyListener` to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
+Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` extends the `java.awt.event.KeyAdapter` abstract class, and overrides its `keyPressed()` method) to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
 
 ## Snake and Apple
-The snake is represented by an 2-dimensional array `int snake[size][2]`. Each pair of array is the x and y coordinates of a point.
+The snake is represented by an 2-dimensional array,
+```java
+int[][] snake = new int[snakeSize][2];
+```
+Each pair of array is the x and y coordinates of a point. For apple, it needs only 1 point, 
+```java
+int[] apple = new int[2];
+```
