@@ -36,7 +36,7 @@ Each pair of array is the x and y coordinates of a point. For apple, it needs on
 int[] apple = new int[2];
 ```
 
-## Timer events based animation
+## Animating the image by Timer `ActionEvent`
 The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals (that is 100ms in my case). Meanwhile `JPanel` is implemented as a `ActionListener` to monitor the `ActionEvent` sent by `Timer` every 100 millisecond. Then these `ActionEvent` trigger `JPanel` to call `actionPerformed()` method to draw the panel frame by frame.
 
 ## Keyboard events controls the snake
