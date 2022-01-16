@@ -23,21 +23,30 @@ For example, if the `.jar` package is saved at `/Users/Tom/Desktop/snake-java-v1
 java -jar /Users/Tom/Desktop/snake-java-v1.0.jar
 ```
 
-## UI
+## GUI
 Using Swing `JFrame` and `JPanel` as a graphic tool to draw a `600 * 600` game board, which is further divided into `40 * 40` small units in size of `15 * 15` for each, called `Grid`.
-
-## Animation
-The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals (that is 100ms in my case). Meanwhile `JPanel` is implemented as a `ActionListener` to monitor the `ActionEvent` sent by `Timer` every 100 millisecond. Then these `ActionEvent` trigger `JPanel` to call `actionPerformed()` method to draw the panel frame by frame.
-
-## Keyboard controls the snake
-Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` extends the `java.awt.event.KeyAdapter` abstract class, and overrides its `keyPressed()` method) to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
 
 ## Snake and Apple
 The snake is represented by an 2-dimensional array,
 ```java
 int[][] snake = new int[snakeSize][2];
 ```
-Each pair of array is the x and y coordinates of a point. For apple, it needs only 1 point, 
+Each pair of array is the x and y coordinates of a point. For apple, it needs only 1 point,
 ```java
 int[] apple = new int[2];
 ```
+
+## Timer events based animation
+The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals (that is 100ms in my case). Meanwhile `JPanel` is implemented as a `ActionListener` to monitor the `ActionEvent` sent by `Timer` every 100 millisecond. Then these `ActionEvent` trigger `JPanel` to call `actionPerformed()` method to draw the panel frame by frame.
+
+## Keyboard events controls the snake
+Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` extends the `java.awt.event.KeyAdapter` abstract class, and overrides its `keyPressed()` method) to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
+
+## Project workflow
+- Language: `Java8`
+- Build Tool: `Gradle`
+- Unit Test: `JUnit-Jupiter`
+- Version Control: `Git`
+- IDE: `Intellij`
+
+
