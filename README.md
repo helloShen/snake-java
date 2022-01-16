@@ -39,6 +39,10 @@ int[] apple = new int[2];
 ## Animating the image by Timer `ActionEvent`
 The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals (that is 100ms in my case). Meanwhile `JPanel` is implemented as a `ActionListener` to monitor the `ActionEvent` sent by `Timer` every 100 millisecond. Then these `ActionEvent` trigger `JPanel` to call `actionPerformed()` method to draw the panel frame by frame.
 
+#### Tips: `repaint()` method is asynchronous
+A typical trap here is that `repaint()` does not do the drawing immediately. What `repaint()` actually do is add a notion in the event queue that the component need to be draw **in the future**. When the swing thread gets to the repaint request, it will, with some intermediate logic, send
+`paintComponent()` to that component. Thus, the time span is not promised. Here's a doc talking about this issue: [<ins>Paint & Repaint in Swing</ins>](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/27PaintRepaint.pdf).
+
 ## Keyboard events controls the snake
 Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` extends the `java.awt.event.KeyAdapter` abstract class, and overrides its `keyPressed()` method) to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
 
@@ -49,4 +53,12 @@ Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` 
 - Version Control: `Git`
 - IDE: `Intellij`
 
-
+## Refs for myself
+1. [Paint & Repaint in Swing](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/27PaintRepaint.pdf)
+2. [Two ways to specify java version in build.gradle file](https://stackoverflow.com/questions/27861658/how-specify-the-required-java-version-in-a-gradle-build)
+3. [Specify java version with gradle toolchains](https://docs.gradle.org/current/userguide/toolchains.html)
+4. [Whether to .gitignore the whole .idea folder or not?](https://stackoverflow.com/questions/3041154/intellij-idea-9-10-what-folders-to-check-into-or-not-check-into-source-contro)
+5. [Another discussion about ignoring .idea folder](https://stackoverflow.com/questions/11968531/what-to-gitignore-from-the-idea-folder)
+6. [An official guide for managing intellij project under version control](https://intellij-support.jetbrains.com/hc/en-us/articles/206544839-How-to-manage-projects-under-Version-Control-Systems)
+7. [JetBrains.gitignore - An ultimate .gitignore file for intellij project](https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore)
+8. [How to remove .idea folder from git commit](https://www.david-merrick.com/2017/08/04/how-to-remove-the-idea-folder-from-git/)
