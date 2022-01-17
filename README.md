@@ -62,3 +62,5 @@ Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` 
 6. [An official guide for managing intellij project under version control](https://intellij-support.jetbrains.com/hc/en-us/articles/206544839-How-to-manage-projects-under-Version-Control-Systems)
 7. [JetBrains.gitignore - An ultimate .gitignore file for intellij project](https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore)
 8. [How to remove .idea folder from git commit](https://www.david-merrick.com/2017/08/04/how-to-remove-the-idea-folder-from-git/)
+9. [Difference between revert, checkout and reset](https://stackoverflow.com/questions/8358035/whats-the-difference-between-git-revert-checkout-and-reset)
+10. [Difference between restore and git reset](https://stackoverflow.com/questions/58003030/what-is-the-git-restore-command-and-what-is-the-difference-between-git-restor/58003889#58003889)
