@@ -54,13 +54,20 @@ Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` 
 - IDE: `Intellij`
 
 ## Refs for myself
-1. [Paint & Repaint in Swing](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/27PaintRepaint.pdf)
-2. [Two ways to specify java version in build.gradle file](https://stackoverflow.com/questions/27861658/how-specify-the-required-java-version-in-a-gradle-build)
-3. [Specify java version with gradle toolchains](https://docs.gradle.org/current/userguide/toolchains.html)
-4. [Whether to .gitignore the whole .idea folder or not?](https://stackoverflow.com/questions/3041154/intellij-idea-9-10-what-folders-to-check-into-or-not-check-into-source-contro)
-5. [Another discussion about ignoring .idea folder](https://stackoverflow.com/questions/11968531/what-to-gitignore-from-the-idea-folder)
-6. [An official guide for managing intellij project under version control](https://intellij-support.jetbrains.com/hc/en-us/articles/206544839-How-to-manage-projects-under-Version-Control-Systems)
-7. [JetBrains.gitignore - An ultimate .gitignore file for intellij project](https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore)
-8. [How to remove .idea folder from git commit](https://www.david-merrick.com/2017/08/04/how-to-remove-the-idea-folder-from-git/)
-9. [Difference between revert, checkout and reset](https://stackoverflow.com/questions/8358035/whats-the-difference-between-git-revert-checkout-and-reset)
-10. [Difference between restore and git reset](https://stackoverflow.com/questions/58003030/what-is-the-git-restore-command-and-what-is-the-difference-between-git-restor/58003889#58003889)
+Swing
+* [Paint & Repaint in Swing](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/27PaintRepaint.pdf)
+
+Gradle
+* [Two ways to specify java version in build.gradle file](https://stackoverflow.com/questions/27861658/how-specify-the-required-java-version-in-a-gradle-build)
+* [Specify java version with gradle toolchains](https://docs.gradle.org/current/userguide/toolchains.html)
+
+Git
+* [Whether to .gitignore the whole .idea folder or not?](https://stackoverflow.com/questions/3041154/intellij-idea-9-10-what-folders-to-check-into-or-not-check-into-source-contro)
+* [Another discussion about ignoring .idea folder](https://stackoverflow.com/questions/11968531/what-to-gitignore-from-the-idea-folder)
+* [How to remove .idea folder from git commit](https://www.david-merrick.com/2017/08/04/how-to-remove-the-idea-folder-from-git/)
+* [Difference between revert, checkout and reset](https://stackoverflow.com/questions/8358035/whats-the-difference-between-git-revert-checkout-and-reset)
+* [Difference between restore and git reset](https://stackoverflow.com/questions/58003030/what-is-the-git-restore-command-and-what-is-the-difference-between-git-restor/58003889#58003889)
+
+Intellij
+* [An official guide for managing intellij project under version control](https://intellij-support.jetbrains.com/hc/en-us/articles/206544839-How-to-manage-projects-under-Version-Control-Systems)
+* [JetBrains.gitignore - An ultimate .gitignore file for intellij project](https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore)
