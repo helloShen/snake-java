@@ -23,11 +23,10 @@
 hs_err_pid*
 directory
 
-# project generated files
+# gradle
 build/
-
-# gradle native or cache files
 .gradle/
+!gradle/wrapper/gradle-wrapper.jar
 
-# intellij native or cache files
+# intellij
 .idea/
