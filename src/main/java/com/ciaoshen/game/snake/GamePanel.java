@@ -38,10 +38,10 @@ public class GamePanel extends JPanel implements ActionListener {
     private char direction = RIGHT;
     // apple
     private final int[] apple = new int[2];
-    // game states
-    private boolean gameStarted = false; // true if timer is started, otherwise false
-    private boolean running = false; // set to false to pause the game
-    private boolean showWelcome = false; // if true, paintComponent() draws welcome interface
+    // game status
+    private enum Mode { WELCOME, GAME_RUNNING, GAME_POSED, GAME_OVER };
+    private Mode mode;
+    private boolean canRedirect = true; // if false, direction can NOT be changed
     private long timeStart = 0; // time consumed for each game
     private long timeEnd = 0;
     // utils
@@ -60,10 +60,10 @@ public class GamePanel extends JPanel implements ActionListener {
         timer = new Timer(TIMEFRAME, this); // bind panel to timer as an ActionListener
         /*
          * !!IMPORTANT!!
-         * Make sure initialize to "Welcome Interface Mode" by default.
-         * Because JFrame.setVisible() will automatically invoke panel.paintComponent() method to draw components.
+         * Make sure to initiate to "Welcome Interface Mode" by default.
+         * Cause JFrame.setVisible() will automatically invoke panel.paintComponent() method to draw components.
          */
-        showWelcome = true;
+        mode = Mode.WELCOME;
     }
 
     /* reinitialize the snake, the apple, and restart the timer. */
@@ -78,8 +78,8 @@ public class GamePanel extends JPanel implements ActionListener {
         // init apple
         newApple();
         // start the game
-        running = true;
-        gameStarted = true;
+        mode = Mode.GAME_RUNNING;
+        canRedirect = true;
         timeEnd = 0;
         timeStart = System.currentTimeMillis();
         timer.start();
@@ -89,8 +89,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private void gameOver() {
         timer.stop();
         timeEnd = System.currentTimeMillis();
-        gameStarted = false;
-        running = false;
+        mode = Mode.GAME_OVER;
         // draw "GAME OVER"
         repaint();
     }
@@ -114,6 +113,8 @@ public class GamePanel extends JPanel implements ActionListener {
             case DOWN:
                 snake[0][1] += GRID_SIZE; break;
         }
+        // now player is free to change direction
+        canRedirect = true;
     }
 
     /* create next apple at a random position */
@@ -136,8 +137,8 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     /* snake dies when,
-     *  1. it's head touches the board,
-     *  2. it's head cuts it's own body
+     *  1. head touches the board,
+     *  2. head cuts it's own body
      */
     private boolean checkCollisions() {
         if (snake[0][0] < 0 || snake[0][0] >= PANEL_WIDTH) return true;
@@ -163,9 +164,16 @@ public class GamePanel extends JPanel implements ActionListener {
         g.fillOval(apple[0], apple[1], GRID_SIZE, GRID_SIZE);
     }
 
+    // Add a pause label to the panel
+    private void drawPause(Graphics g) {
+        draw(g);
+        g.setColor(TEXT_WHITE);
+        g.fillRect(PANEL_WIDTH / 2 - (GRID_SIZE * 2), PANEL_HEIGHT / 2 - (GRID_SIZE * 2), GRID_SIZE, GRID_SIZE * 4);
+        g.fillRect(PANEL_WIDTH / 2 + GRID_SIZE, PANEL_HEIGHT / 2 - (GRID_SIZE * 2), GRID_SIZE, GRID_SIZE * 4);
+    }
+
     /* draw the welcome interface */
     private void drawWelcome(Graphics g) {
-        showWelcome = false; // turn off welcome interface mode
         g.setColor(TEXT_WHITE);
         g.setFont(new Font("courier", Font.PLAIN, 50));
         g.drawString("Hungry Snake", 20, 225);
@@ -191,23 +199,36 @@ public class GamePanel extends JPanel implements ActionListener {
         g.drawString("[Press ENTER to try again!]", 100, 450);
     }
 
-    /* panel automatically call this method to paint the panel when repaint() is invoked */
+    /*
+     * This method is NOT supposed to be invoked directly by programmer.
+     * JPanel.repaint() method will ask panel to invoke this method for you.
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (gameStarted) {
-            draw(g);
-        } else if (showWelcome) {
-            drawWelcome(g);
-        } else {
-            drawGameOver(g);
+        switch(mode) {
+            case WELCOME:
+                drawWelcome(g);
+                break;
+            case GAME_RUNNING:
+                draw(g);
+                break;
+            case GAME_OVER:
+                drawGameOver(g);
+                break;
+            case GAME_POSED:
+                drawPause(g);
+                break;
         }
     }
 
-    /* timer trigger an ActionEvent and call this listener method every 100 millisecond */
+    /*
+     * A callback method defined by ActionListener interface.
+     * Timer thread will periodically callback this method.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (running) {
+        if (mode == Mode.GAME_RUNNING) {
             move();
             if (checkCollisions()) {
                 gameOver();
@@ -216,48 +237,61 @@ public class GamePanel extends JPanel implements ActionListener {
             if (reachApple()) {
                 eatApple();
             }
+            repaint();
         }
-        repaint();
     }
 
 
-    /* KeyListener implementation which is fed to panel by using setKeyListener() method. */
+    /* Local KeyListener implementation. */
     private class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (!running) running = true;
-                    if (direction != 'R') {
+                    if (canRedirect && direction != 'R') {
                         direction = 'L';
+                        canRedirect = false;
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (!running) running = true;
-                    if (direction != 'L') {
+                    if (canRedirect && direction != 'L') {
                         direction = 'R';
+                        canRedirect = false;
                     }
                     break;
                 case KeyEvent.VK_UP:
-                    if (!running) running = true;
-                    if (direction != 'D') {
+                    if (canRedirect && direction != 'D') {
                         direction = 'U';
+                        canRedirect = false;
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (!running) running = true;
-                    if (direction != 'U') {
+                    if (canRedirect && direction != 'U') {
                         direction = 'D';
+                        canRedirect = false;
                     }
                     break;
                 case KeyEvent.VK_SPACE: // pause the game
-                    running = !running;
-                    break;
-                case KeyEvent.VK_ENTER: // restart the game
-                    if (!gameStarted) { // prevent user from restarting game when game is running
-                        gameStart();
+                    if (mode == Mode.GAME_RUNNING) {
+                        // In pause mode, timer ActionEvent handler do nothing. repaint() method need to be called manually.
+                        mode = Mode.GAME_POSED;
+                        repaint();
+                    } else if (mode == Mode.GAME_POSED) {
+                        mode = Mode.GAME_RUNNING;
+                        repaint();
                     }
                     break;
+                case KeyEvent.VK_ENTER: // restart the game
+                    if (mode == Mode.WELCOME) { // prevent user from restarting game when game is running
+                        repaint();
+                        gameStart();
+                    } else if (mode == Mode.GAME_OVER) {
+                        mode = Mode.WELCOME;
+                        repaint();
+                    }
+                    break;
+                default:
+                    // do nothing
             }
         }
     }
