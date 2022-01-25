@@ -8,7 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-public class GamePanel extends JPanel implements ActionListener {
+public class GamePanel extends JPanel {
 
     // panel size
     private static final int PANEL_WIDTH = 600;
@@ -22,7 +22,6 @@ public class GamePanel extends JPanel implements ActionListener {
     private static final int GRID_SIZE = 15;
     private static final int GRIDS_X = PANEL_WIDTH / GRID_SIZE;
     private static final int GRIDS_Y = PANEL_HEIGHT / GRID_SIZE;
-    private static final int EYE_SIZE = 4;
     // 4 directions
     private static final char RIGHT = 'R';
     private static final char LEFT = 'L';
@@ -39,7 +38,7 @@ public class GamePanel extends JPanel implements ActionListener {
     // apple
     private final int[] apple = new int[2];
     // game status
-    private enum Mode { WELCOME, GAME_RUNNING, GAME_POSED, GAME_OVER };
+    private enum Mode { WELCOME, GAME_RUNNING, GAME_POSED, GAME_OVER }
     private Mode mode;
     private boolean canRedirect = true; // if false, direction can NOT be changed
     private long timeStart = 0; // time consumed for each game
@@ -55,9 +54,9 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setFocusable(true);
         // utils setting
         random = new Random(System.currentTimeMillis());
-        // binding event listener
+        // binding event listeners
         this.addKeyListener(new MyKeyAdapter()); // bind KeyListener to panel
-        timer = new Timer(TIMEFRAME, this); // bind panel to timer as an ActionListener
+        timer = new Timer(TIMEFRAME, new MyTimerAdapter()); // bind an ActionListener to timer as an ActionListener
         /*
          * !!IMPORTANT!!
          * Make sure to initiate to "Welcome Interface Mode" by default.
@@ -222,25 +221,27 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    /*
-     * A callback method defined by ActionListener interface.
-     * Timer thread will periodically callback this method.
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (mode == Mode.GAME_RUNNING) {
-            move();
-            if (checkCollisions()) {
-                gameOver();
-                return;
+    /* My implementation of ActionListener interface */
+    private class MyTimerAdapter implements ActionListener {
+        /*
+         * A callback ActionEvent handler method defined by ActionListener interface.
+         * Timer thread will periodically callback this method.
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (mode == Mode.GAME_RUNNING) {
+                move();
+                if (checkCollisions()) {
+                    gameOver();
+                    return;
+                }
+                if (reachApple()) {
+                    eatApple();
+                }
+                repaint();
             }
-            if (reachApple()) {
-                eatApple();
-            }
-            repaint();
         }
     }
-
 
     /* Local KeyListener implementation. */
     private class MyKeyAdapter extends KeyAdapter {

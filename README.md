@@ -15,38 +15,88 @@ My implementation of a tiny game Hungry Snake. Developed based on java Swing.
 ## Usage
 Download the latest version: `snake-java-v1.0.jar`. Type the following command line in terminal:
 ```bash
-java -jar <path-to-your-snake-java-v1.0.jar>
+java -jar <path-to-your-snake-java-vx.x.jar>
 ```
 
-For example, if the `.jar` package is saved at `/Users/Tom/Desktop/snake-java-v1.0.jar`, then the command would be,
+For example, for `/Users/Tom/Desktop/snake-java-v1.0.jar`, the command would be,
 ```bash
-java -jar /Users/Tom/Desktop/snake-java-v1.0.jar
+java -jar /Users/Tom/Desktop/snake-java-v1.4.jar
 ```
 
-## GUI
-Using Swing `JFrame` and `JPanel` as a graphic tool to draw a `600 * 600` game board, which is further divided into `40 * 40` small units in size of `15 * 15` for each, called `Grid`.
+## MVC pattern
+The game is developed with MVC design pattern.
 
-## Snake and Apple
-The snake is represented by an 2-dimensional array,
+### View: JFrame and JPanel
+Using Swing `JFrame` and `JPanel` to draw a `600 * 600` game board, which is further divided into `40 * 40` small units, `15 * 15` pixels for each, called `Grid`. We set some of those grids into different color to draw a picture.
 ```java
-int[][] snake = new int[snakeSize][2];
+// panel size
+private static final int PANEL_WIDTH = 600;
+private static final int PANEL_HEIGHT = 600;
+// grids
+private static final int GRID_SIZE = 15;
+private static final int GRIDS_X = PANEL_WIDTH / GRID_SIZE;
+private static final int GRIDS_Y = PANEL_HEIGHT / GRID_SIZE;
 ```
-Each pair of array is the x and y coordinates of a point. For apple, it needs only 1 point,
-```java
-int[] apple = new int[2];
-```
+`paintComponent()` method is in charge of changing view. JPanel instance will invoke `paintComponent()` for us when we call `repaint()` method.
 
-## Animating the image by Timer `ActionEvent`
-The main idea is to use `javax.swing.Timer` to fire `ActionEvent` at specified intervals (that is 100ms in my case). Meanwhile `JPanel` is implemented as a `ActionListener` to monitor the `ActionEvent` sent by `Timer` every 100 millisecond. Then these `ActionEvent` trigger `JPanel` to call `actionPerformed()` method to draw the panel frame by frame.
-
-#### Tips: `repaint()` method is asynchronous
 A typical trap here is that `repaint()` does not do the drawing immediately. What `repaint()` actually do is add a notion in the event queue that the component need to be draw **in the future**. When the swing thread gets to the repaint request, it will, with some intermediate logic, send
 `paintComponent()` to that component. Thus, the time span is not promised. Here's a doc talking about this issue: [<ins>Paint & Repaint in Swing</ins>](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/27PaintRepaint.pdf).
 
-## Keyboard events controls the snake
-Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` extends the `java.awt.event.KeyAdapter` abstract class, and overrides its `keyPressed()` method) to the panel using `java.swing.JPanel.addKeyListener()` method, so that panel can receive keyboard event.
+### Model: snake array and apple array
+The snake on the canvas is just a bunch of contiguous grids with a different color. Which can be easily represented by an 2-dimensional array. Each column corresponds to the x and y coordinates of a point. For apple, we need only 1 single point.
+```java
+// snake
+private final int[][] snake = new int[GRIDS_X * GRIDS_Y][2];
+// apple
+private final int[] apple = new int[2];
+```
 
-## Project workflow
+### Controller - event dispatching thread
+Swing is not thread safe. All Swing components and related classes, must be accessed on the event dispatching thread.
+```java
+public class SnakeGame implements Runnable {
+    // some initialization code omitted
+    @Override
+    public void run() {
+        // Invoked on the event dispatching thread.
+        // Construct and show GUI.
+    }
+
+    public static void main(String[] args) {
+        // Invoke SnakeGame on the event dispatching thread.
+        SwingUtilities.invokeLater(new SnakeGame());
+    }
+}
+```
+Two event listeners living on event dispatching thread monitor two different types of events:
+* `MyTimerAdapter` implements `TimerListener` interface. It monitors `ActionsEvent` from Timer. Timer callback `actionPerformed()` event handler to draw the panel at specified intervals.
+* `MyKeyAdapter` implements `KeyListener` interface. It monitors `KeyEvent` from user's keyboard. Then the event handler `keyPressed()` will decide how to control the snake by changing the data in `snake[][]` array.
+
+They were created as two inner classes of `GamePanel` class.
+```java
+private class MyTimerAdapter implements ActionListener { /* some code */ }
+private class MyKeyAdapter extends KeyAdapter { /* some code */ }
+```
+
+Have to mention, `KeyListener` need a keyboard focus, which can be provided by `GamePanel`. So `MyKeyAdapter` is plugin to the `GamePanel` by `addKeyListener()` method.
+```java
+public GamePanel(){
+    // ... some code ommited
+    this.addKeyListener(new MyKeyAdapter()); // bind KeyListener to panel
+    // ...
+}
+```
+
+### Thread safety
+We have two threads in `SnakeGame` process:
+* event dispatching thread (an event queue)
+* timer thread
+
+All event listener, event handler or others tasks are living on event dispatching thread, which maintain a synchronized `EventQueue`. Timer thread has nothing to do with all these tasks. The only thing it does is sending a signal to the event dispatching thread, reminding it to repaint the panel. The event dispatching thread will keep everything synchronized in event queue.
+
+So our SnakeGame is thread safe.
+
+### Project workflow
 - Language: `Java8`
 - Build Tool: `Gradle`
 - Unit Test: `JUnit-Jupiter`
@@ -55,7 +105,16 @@ Bind a `java.awt.event.KeyListener` (in my case, the inner class `MyKeyAdapter` 
 
 ## Refs for myself
 Swing
+* [Event dispatching thread documentation](https://docs.oracle.com/javase/tutorial/uiswing/concurrency/dispatch.html)
+* [Swing thread policy](https://docs.oracle.com/javase/7/docs/api/javax/swing/package-summary.html#threading)
+* [More discusses about event dispatching thread on stackoverflow](https://docs.oracle.com/javase/tutorial/uiswing/concurrency/dispatch.html)
+* [Swing event & listener explained](https://docs.oracle.com/javase/tutorial/uiswing/events/intro.html)
+* [How to write a key listener](https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html)
+* [JPanel is focusable](https://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html)
+* [JFrame API](https://docs.oracle.com/javase/tutorial/uiswing/components/frame.html)
+* [How to use Swing Timer](https://docs.oracle.com/javase/7/docs/api/javax/swing/Timer.html)
 * [Paint & Repaint in Swing](https://web.stanford.edu/class/archive/cs/cs108/cs108.1092/handouts/27PaintRepaint.pdf)
+* A good book to read: [Java Concurrency in Practice]
 
 Gradle
 * [Two ways to specify java version in build.gradle file](https://stackoverflow.com/questions/27861658/how-specify-the-required-java-version-in-a-gradle-build)
